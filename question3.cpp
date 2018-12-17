@@ -25,7 +25,7 @@ bool isPrime(long int x) {
 	}
 
 	// Assume x is odd
-	int highest_to_check;
+	long int highest_to_check;
 	highest_to_check = (x + 1) / 2;
 
 	int i;
@@ -42,18 +42,34 @@ bool isPrime(long int x) {
 
 // Get the largest factor of a number
 long int getLargestFactor(long int x) {
-	if (isPrime(x)) {
-		return x;
-	}
-	else if (isEven(x)) {
+	// if (isPrime(x)) {
+	// 	return x;
+	// }
+	if (isEven(x)) {
 		return getLargestFactor(x / 2);
 	}
-	// Now assume x is odd and composite
+	// Now assume x is odd
+	// Loop through all odd numbers up to (x-1)/2
+	// If any divide x, call function on x / that number
+	int i;
+	long int M;
+	M = (x+1)/2;
 	
+	for (i=3; i <= M; i+=2) {
+	  if (x % i == 0) {
+	    return getLargestFactor(x / i);
+	  }
+	}
+	
+	// If we reach this point, x is prime
+	return x;
 }
 
 int main() {
 
-	std::cout << isPrime(67) << "\n";
-	
+  long int x;
+  std::cout << "Enter number: ";
+  std::cin >> x;
+  std::cout << "Largest prime factor of " << x << " is " << getLargestFactor(x) << "\n";
+  
 }

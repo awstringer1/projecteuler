@@ -10,17 +10,23 @@
 #include <vector>
 #include <math.h>
 
+bool isEven(long int x) {
+  if (x % 2 == 0) {
+    return true;
+  }
+  
+  return false;
+}
+
 // The Sieve of Eratosthenes
 // Return all the primes up to a given point
 // Returns a pointer to an array holding these values
 std::vector<long int> sieve(long int n) {
   // static long int nums[10];
-  std::vector<long int> nums;
   std::vector<bool> A;
   int i;
   
   for (i=0;i<n;i++) {
-    nums.push_back(i+1); // Add the nth number
     A.push_back(true); // Initialize an array of all trues
   }
   
@@ -29,24 +35,57 @@ std::vector<long int> sieve(long int n) {
   int sqrtn_int = (int) sqrtn + 1;
   
   int j;
-  for (i = 0; i < sqrtn_int - 2; i++) {
-    if (A[i]) {
-      for (j = pow(i+2,2); j <= n; j += i+2) {
-        A[j] = false;
+  // std::cout << "Starting first loop\n";
+  for (i = 2; i <= sqrtn_int; i++) {
+    // std::cout << "i = " << i << "\n";
+    if (A[i-2]) {
+      // std::cout << "A[" << i - 2 << "] is true.\n";
+      for (j = pow(i,2); j <= n; j += i) {
+        // std::cout << "j = " << j << "\n";
+        // std::cout << "Setting A[" << j-2 << "] to false\n";
+        A[j-2] = false;
       }
     }
   }
   
+  // std::cout << "Starting second loop\n";
   std::vector<long int> out;
   for (i=0;i<n;i++) {
+    // std::cout << "i = " << i << "\n";
     if (A[i]) {
-      out.push_back(nums[i]);
+      // std::cout << "A[" << i << "] is true.\n";
+      // std::cout << "Adding " << i+2 << " to out\n";
+      out.push_back(i+2);
     }
   }
   
-  
-  
   return out;
+}
+
+bool isPrime(long int x) {
+  if (x == 1 | x == 2) {
+    return true;
+  }
+  else if (isEven(x)) {
+    return false;
+  }
+  
+  // Assume x is odd
+  long int highest_to_check;
+  double xsqrt;
+  xsqrt = sqrt(x);
+  highest_to_check = int(xsqrt) + 1;
+  
+  int i;
+  
+  for (i=3;i<=highest_to_check;i+=2) {
+    if (x % i == 0) {
+      return false;
+    }
+  }
+  
+  return true;
+  
 }
 
 int main() {
@@ -55,12 +94,28 @@ int main() {
   std::cin >> n;
   //std::cout << "\n";
   std::vector<long int> thesieve = sieve(n);
-  std::cout << "Here the primes up to " << n << ": ";
-  int i;
-  for (i=0;i<n;i++) {
-    if (abs(thesieve[i]) <= n) {
-      std::cout << thesieve[i] << " ";
-    }
-  }
-  std::cout << "\n";
+  std::cout << "The length of the vector returned by the sieve is " << thesieve.size() - 1 << "\n";
+  
+  std::cout << "The 10,000th, 10,001st, and 10,002nd primes are: " << 
+    thesieve[9999] << " " << 
+    thesieve[10000] << " " << 
+    thesieve[10001] << " " << 
+    thesieve[10002] << " " << 
+    thesieve[10003] << "\n";
+  // std::cout << "Here the primes up to " << n << ": ";
+  // int i;
+  // for (i=0;i<thesieve.size();i++) {
+  //   if (abs(thesieve[i]) <= n) {
+  //     std::cout << thesieve[i] << " ";
+  //   }
+  // }
+  // std::cout << "\n";
+  // std::cout << "Checking if they are all actually prime...\n";
+  // int j;
+  // for (j=0;j<thesieve.size();j++) {
+  //   if (!isPrime(thesieve[j])) {
+  //     std::cout << thesieve[j] << " is not prime!\n";
+  //     // break;
+  //   }
+  // }
 }
